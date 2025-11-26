@@ -219,12 +219,13 @@
                 this.gameStarted = false;
                 this.gameOver = false;
                 this.lastObstacleTime = 0;
-                this.obstacleInterval = 1800; // Интервал между препятствиями
+                this.obstacleInterval = 1800;
+                this.animationFrame = 0;
                 
                 // Динозаврик
                 this.dino = {
                     x: 50,
-                    y: this.canvas.height * 0.75,
+                    y: this.canvas.height * 0.75 - 40,
                     width: 40,
                     height: 40,
                     jumping: false,
@@ -251,7 +252,7 @@
                 this.canvas.height = Math.min(250, this.canvas.width * 0.5);
                 
                 if (this.dino) {
-                    this.dino.y = this.canvas.height * 0.75;
+                    this.dino.y = this.canvas.height * 0.75 - 40;
                 }
             }
             
@@ -309,6 +310,7 @@
                 this.obstacles = [];
                 this.lastObstacleTime = Date.now();
                 this.gameSpeed = 1;
+                this.animationFrame = 0;
                 
                 document.getElementById('startBtn').textContent = '🦖 ПРЫЖОК';
             }
@@ -320,7 +322,8 @@
                 this.obstacles = [];
                 this.lastObstacleTime = Date.now();
                 this.gameSpeed = 1;
-                this.dino.y = this.canvas.height * 0.75;
+                this.animationFrame = 0;
+                this.dino.y = this.canvas.height * 0.75 - 40;
                 this.dino.jumping = false;
                 this.dino.jumpVelocity = 0;
             }
@@ -328,7 +331,6 @@
             jump() {
                 if (!this.dino.jumping && this.gameStarted && !this.gameOver) {
                     this.dino.jumping = true;
-                    // Уменьшенная высота прыжка
                     this.dino.jumpVelocity = -12;
                 }
             }
@@ -336,13 +338,16 @@
             update() {
                 if (!this.gameStarted || this.gameOver) return;
                 
+                // Анимация бега
+                this.animationFrame++;
+                
                 // Обновление динозавра
                 if (this.dino.jumping) {
                     this.dino.y += this.dino.jumpVelocity;
                     this.dino.jumpVelocity += this.dino.gravity;
                     
-                    if (this.dino.y >= this.canvas.height * 0.75) {
-                        this.dino.y = this.canvas.height * 0.75;
+                    if (this.dino.y >= this.canvas.height * 0.75 - 40) {
+                        this.dino.y = this.canvas.height * 0.75 - 40;
                         this.dino.jumping = false;
                         this.dino.jumpVelocity = 0;
                     }
@@ -390,20 +395,20 @@
                 const type = types[Math.floor(Math.random() * types.length)];
                 
                 if (type === 'meteor') {
-                    // Метеорит летит по земле (как обычное препятствие)
+                    // Метеорит летит высоко (требует прыжка)
                     this.obstacles.push({
                         x: this.canvas.width,
-                        y: this.canvas.height * 0.75 - 30,
+                        y: this.canvas.height * 0.75 - 80, // Высоко над землей
                         width: 35,
                         height: 35,
                         type: 'meteor',
                         speed: this.gameSpeed
                     });
                 } else {
-                    // Пень
+                    // Пень на земле (низкое препятствие)
                     this.obstacles.push({
                         x: this.canvas.width,
-                        y: this.canvas.height * 0.75 - 40,
+                        y: this.canvas.height * 0.75 - 40, // На уровне земли
                         width: 30,
                         height: 40,
                         type: 'stump',
@@ -427,13 +432,8 @@
                 this.ctx.fillStyle = '#87CEEB';
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height * 0.8);
                 
-                // Земля
-                this.ctx.fillStyle = '#8B4513';
-                this.ctx.fillRect(0, this.canvas.height * 0.75, this.canvas.width, this.canvas.height * 0.25);
-                
-                // Трава
-                this.ctx.fillStyle = '#7CFC00';
-                this.ctx.fillRect(0, this.canvas.height * 0.75, this.canvas.width, 5);
+                // Земля с травой
+                this.drawGround();
                 
                 // Динозаврик
                 this.drawDino();
@@ -451,40 +451,85 @@
                 this.drawMessages();
             }
             
+            drawGround() {
+                const groundY = this.canvas.height * 0.75;
+                
+                // Земля
+                this.ctx.fillStyle = '#8B4513';
+                this.ctx.fillRect(0, groundY, this.canvas.width, this.canvas.height - groundY);
+                
+                // Трава с анимацией
+                this.ctx.fillStyle = '#7CFC00';
+                for (let i = -1; i < this.canvas.width / 20 + 1; i++) {
+                    const x = (i * 20 + this.groundX) % (this.canvas.width + 40) - 20;
+                    const height = 8 + Math.sin((this.groundX + i * 10) * 0.1) * 3;
+                    this.ctx.fillRect(x, groundY - height, 15, height);
+                }
+            }
+            
             drawDino() {
+                const isRunning = !this.dino.jumping;
+                const legOffset = isRunning ? Math.sin(this.animationFrame * 0.3) * 5 : 0;
+                
                 // Тело динозавра
                 this.ctx.fillStyle = '#4CAF50';
                 this.ctx.fillRect(this.dino.x, this.dino.y, this.dino.width, this.dino.height);
                 
+                // Голова
+                this.ctx.fillStyle = '#45a049';
+                this.ctx.fillRect(this.dino.x + 25, this.dino.y - 10, 20, 15);
+                
                 // Глаз
                 this.ctx.fillStyle = 'white';
-                this.ctx.fillRect(this.dino.x + 25, this.dino.y + 10, 8, 8);
+                this.ctx.fillRect(this.dino.x + 35, this.dino.y - 5, 6, 6);
                 this.ctx.fillStyle = 'black';
-                this.ctx.fillRect(this.dino.x + 27, this.dino.y + 12, 4, 4);
+                this.ctx.fillRect(this.dino.x + 37, this.dino.y - 3, 3, 3);
                 
-                // Ноги
-                if (!this.dino.jumping) {
-                    this.ctx.fillStyle = '#45a049';
-                    this.ctx.fillRect(this.dino.x + 5, this.dino.y + this.dino.height, 8, 15);
-                    this.ctx.fillRect(this.dino.x + 25, this.dino.y + this.dino.height, 8, 15);
+                // Ноги с анимацией бега
+                this.ctx.fillStyle = '#45a049';
+                if (isRunning) {
+                    // Передняя нога
+                    this.ctx.fillRect(this.dino.x + 5, this.dino.y + this.dino.height, 8, 15 + legOffset);
+                    // Задняя нога
+                    this.ctx.fillRect(this.dino.x + 25, this.dino.y + this.dino.height, 8, 15 - legOffset);
+                } else {
+                    // Ноги в прыжке
+                    this.ctx.fillRect(this.dino.x + 5, this.dino.y + this.dino.height, 8, 10);
+                    this.ctx.fillRect(this.dino.x + 25, this.dino.y + this.dino.height, 8, 10);
+                }
+                
+                // Хвост
+                this.ctx.fillStyle = '#45a049';
+                this.ctx.fillRect(this.dino.x - 10, this.dino.y + 10, 15, 5);
+                
+                // Спинные пластины
+                for (let i = 0; i < 3; i++) {
+                    this.ctx.fillStyle = i % 2 === 0 ? '#388E3C' : '#2E7D32';
+                    this.ctx.fillRect(this.dino.x + 5 + i * 12, this.dino.y - 8, 8, 10);
                 }
             }
             
             drawMeteor(meteor) {
-                // Простой метеорит - серый круг
+                // Метеорит - серый круг с деталями
                 this.ctx.fillStyle = '#666';
                 this.ctx.beginPath();
                 this.ctx.arc(meteor.x + meteor.width/2, meteor.y + meteor.height/2, meteor.width/2, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Детали метеорита
+                // Кратеры на метеорите
                 this.ctx.fillStyle = '#888';
                 this.ctx.beginPath();
-                this.ctx.arc(meteor.x + meteor.width/3, meteor.y + meteor.height/3, 5, 0, Math.PI * 2);
+                this.ctx.arc(meteor.x + meteor.width/3, meteor.y + meteor.height/3, 4, 0, Math.PI * 2);
                 this.ctx.fill();
                 
                 this.ctx.beginPath();
-                this.ctx.arc(meteor.x + meteor.width*2/3, meteor.y + meteor.height*2/3, 4, 0, Math.PI * 2);
+                this.ctx.arc(meteor.x + meteor.width*2/3, meteor.y + meteor.height*2/3, 3, 0, Math.PI * 2);
+                this.ctx.fill();
+                
+                // Световой блик
+                this.ctx.fillStyle = '#999';
+                this.ctx.beginPath();
+                this.ctx.arc(meteor.x + meteor.width/4, meteor.y + meteor.height/4, 2, 0, Math.PI * 2);
                 this.ctx.fill();
             }
             
@@ -493,16 +538,19 @@
                 this.ctx.fillStyle = '#8B4513';
                 this.ctx.fillRect(stump.x, stump.y, stump.width, stump.height);
                 
-                // Кольца на пне
-                this.ctx.strokeStyle = '#654321';
-                this.ctx.lineWidth = 2;
-                this.ctx.beginPath();
-                this.ctx.arc(stump.x + stump.width/2, stump.y + stump.height/2, 8, 0, Math.PI * 2);
-                this.ctx.stroke();
+                // Верх пня
+                this.ctx.fillStyle = '#A0522D';
+                this.ctx.fillRect(stump.x, stump.y, stump.width, 8);
                 
-                this.ctx.beginPath();
-                this.ctx.arc(stump.x + stump.width/2, stump.y + stump.height/2, 4, 0, Math.PI * 2);
-                this.ctx.stroke();
+                // Кора
+                this.ctx.strokeStyle = '#654321';
+                this.ctx.lineWidth = 1;
+                for (let i = 1; i < 3; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(stump.x + i * 10, stump.y);
+                    this.ctx.lineTo(stump.x + i * 10, stump.y + stump.height);
+                    this.ctx.stroke();
+                }
             }
             
             drawMessages() {
@@ -514,7 +562,7 @@
                     this.ctx.textAlign = 'center';
                     this.ctx.fillText('Нажми СТАРТ чтобы начать!', this.canvas.width / 2, this.canvas.height / 2);
                     this.ctx.font = '14px Arial';
-                    this.ctx.fillText('Прыгай через пни и метеориты', this.canvas.width / 2, this.canvas.height / 2 + 30);
+                    this.ctx.fillText('Прыгай через пни и высокие метеориты', this.canvas.width / 2, this.canvas.height / 2 + 30);
                 }
                 
                 if (this.gameOver) {
