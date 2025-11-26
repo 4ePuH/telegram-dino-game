@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telegram Космический Динозаврик</title>
+    <title>Telegram Динозаврик</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -16,11 +16,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         .container {
@@ -41,10 +40,6 @@
         .game-header h1 {
             font-size: 20px;
             margin-bottom: 8px;
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .user-info {
@@ -53,14 +48,12 @@
         }
 
         .game-container {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 15px;
-            backdrop-filter: blur(10px);
             flex: 1;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         #gameCanvas {
@@ -68,9 +61,9 @@
             height: 35vh;
             min-height: 200px;
             max-height: 300px;
-            background: #1a1a2e;
+            background: #87CEEB;
             border-radius: 8px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             display: block;
             margin: 0 auto;
             touch-action: none;
@@ -78,43 +71,40 @@
 
         .controls {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 8px;
             margin: 15px 0;
             flex-shrink: 0;
         }
 
         .control-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #4CAF50;
             border: none;
             color: white;
-            padding: 14px 8px;
+            padding: 14px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-            min-width: 0;
             touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .control-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            background: #45a049;
+            transform: scale(0.98);
         }
 
         .game-stats {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin: 15px 0;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.1);
             padding: 12px;
             border-radius: 8px;
             flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .stat {
@@ -131,8 +121,7 @@
 
         .stat span:last-child {
             font-size: 16px;
-            color: #feca57;
-            text-shadow: 0 0 10px rgba(254, 202, 87, 0.5);
+            color: #ffd700;
         }
 
         .instructions {
@@ -142,14 +131,6 @@
             line-height: 1.4;
             margin-top: 12px;
             flex-shrink: 0;
-        }
-
-        .mobile-controls-hint {
-            text-align: center;
-            font-size: 10px;
-            opacity: 0.6;
-            margin-top: 5px;
-            display: none;
         }
 
         /* Адаптивность */
@@ -172,8 +153,8 @@
             }
             
             .control-btn {
-                padding: 12px 6px;
-                font-size: 12px;
+                padding: 12px;
+                font-size: 14px;
             }
         }
 
@@ -186,103 +167,13 @@
                 height: 25vh;
                 min-height: 150px;
             }
-            
-            .mobile-controls-hint {
-                display: block;
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 500px) {
-            .container {
-                flex-direction: row;
-                padding: 5px;
-            }
-            
-            .game-header {
-                display: none;
-            }
-            
-            .game-container {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            #gameCanvas {
-                height: 80vh;
-                width: 60%;
-                margin-right: 10px;
-            }
-            
-            .controls-container {
-                width: 35%;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .controls {
-                grid-template-columns: 1fr;
-                margin-bottom: 10px;
-            }
-            
-            .game-stats {
-                grid-template-columns: 1fr;
-                margin-bottom: 10px;
-            }
-            
-            .instructions {
-                display: none;
-            }
-        }
-
-        /* Анимации */
-        @keyframes buttonPress {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-            100% { transform: scale(1); }
-        }
-
-        .button-press {
-            animation: buttonPress 0.1s ease;
-        }
-
-        .game-started .control-btn:not(#startBtn) {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        #startBtn.game-active {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        /* Звездный фон */
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
     <div class="container">
         <div class="game-header">
-            <h1>🦖 Космический Динозаврик</h1>
+            <h1>🦖 Динозаврик</h1>
             <div class="user-info" id="user-info"></div>
         </div>
         
@@ -290,13 +181,7 @@
             <canvas id="gameCanvas" width="800" height="200"></canvas>
             
             <div class="controls">
-                <button id="jumpBtn" class="control-btn">⬆️ ПРЫЖОК</button>
-                <button id="startBtn" class="control-btn">🎮 СТАРТ</button>
-                <button id="duckBtn" class="control-btn">⬇️ ПРИСЕСТЬ</button>
-            </div>
-            
-            <div class="mobile-controls-hint">
-                Касание экрана = прыжок
+                <button id="startBtn" class="control-btn">🎮 СТАРТ / ПРЫЖОК</button>
             </div>
             
             <div class="game-stats">
@@ -308,16 +193,11 @@
                     <span>РЕКОРД:</span>
                     <span id="highScore">0</span>
                 </div>
-                <div class="stat">
-                    <span>СКОРОСТЬ:</span>
-                    <span id="speed">1x</span>
-                </div>
             </div>
             
             <div class="instructions">
-                <p>🔼 Прыгай через пни 🌳</p>
-                <p>🔽 Уклоняйся от метеоритов ☄️</p>
-                <p>Касание экрана = прыжок</p>
+                <p>🔼 Прыгай через пни и метеориты</p>
+                <p>Пробел или касание - прыжок</p>
             </div>
         </div>
     </div>
@@ -329,9 +209,6 @@
                 this.ctx = this.canvas.getContext('2d');
                 this.tg = window.Telegram.WebApp;
                 
-                // Создание звездного фона
-                this.createStars();
-                
                 // Адаптация размера canvas
                 this.resizeCanvas();
                 
@@ -342,28 +219,21 @@
                 this.gameStarted = false;
                 this.gameOver = false;
                 this.lastObstacleTime = 0;
-                this.obstacleInterval = 2000; // Интервал между препятствиями (2 секунды)
-                
-                // Адаптированные размеры
-                const baseSize = Math.min(this.canvas.width, this.canvas.height) * 0.05;
+                this.obstacleInterval = 1800; // Интервал между препятствиями
                 
                 // Динозаврик
                 this.dino = {
-                    x: baseSize * 2,
+                    x: 50,
                     y: this.canvas.height * 0.75,
-                    width: baseSize * 2,
-                    height: baseSize * 2,
+                    width: 40,
+                    height: 40,
                     jumping: false,
-                    ducking: false,
                     jumpVelocity: 0,
-                    gravity: 0.8 * (this.canvas.height / 200),
-                    maxJumpHeight: this.canvas.height * 0.4
+                    gravity: 0.8
                 };
                 
                 this.obstacles = [];
-                this.clouds = [];
                 this.groundX = 0;
-                this.stars = [];
                 
                 this.setupEventListeners();
                 this.loadHighScore();
@@ -371,25 +241,6 @@
                 this.gameLoop();
                 
                 window.addEventListener('resize', () => this.resizeCanvas());
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => this.resizeCanvas(), 100);
-                });
-            }
-            
-            createStars() {
-                const starsContainer = document.getElementById('stars');
-                starsContainer.innerHTML = '';
-                
-                for (let i = 0; i < 50; i++) {
-                    const star = document.createElement('div');
-                    star.className = 'star';
-                    star.style.width = Math.random() * 2 + 1 + 'px';
-                    star.style.height = star.style.width;
-                    star.style.left = Math.random() * 100 + '%';
-                    star.style.top = Math.random() * 100 + '%';
-                    star.style.animationDelay = Math.random() * 3 + 's';
-                    starsContainer.appendChild(star);
-                }
             }
             
             resizeCanvas() {
@@ -400,13 +251,7 @@
                 this.canvas.height = Math.min(250, this.canvas.width * 0.5);
                 
                 if (this.dino) {
-                    const baseSize = Math.min(this.canvas.width, this.canvas.height) * 0.05;
-                    this.dino.x = baseSize * 2;
                     this.dino.y = this.canvas.height * 0.75;
-                    this.dino.width = baseSize * 2;
-                    this.dino.height = baseSize * 2;
-                    this.dino.gravity = 0.8 * (this.canvas.height / 200);
-                    this.dino.maxJumpHeight = this.canvas.height * 0.4;
                 }
             }
             
@@ -417,69 +262,39 @@
                 const user = this.tg.initDataUnsafe.user;
                 if (user) {
                     document.getElementById('user-info').textContent = 
-                        `Космонавт: ${user.first_name || 'Аноним'}`;
+                        `Игрок: ${user.first_name || 'Аноним'}`;
                 }
             }
             
             setupEventListeners() {
-                // Кнопки управления
-                document.getElementById('jumpBtn').addEventListener('click', (e) => {
-                    e.currentTarget.classList.add('button-press');
-                    setTimeout(() => e.currentTarget.classList.remove('button-press'), 100);
-                    this.jump();
-                });
-                
-                document.getElementById('duckBtn').addEventListener('click', (e) => {
-                    e.currentTarget.classList.add('button-press');
-                    setTimeout(() => e.currentTarget.classList.remove('button-press'), 100);
-                    this.duck();
-                });
-                
-                document.getElementById('startBtn').addEventListener('click', (e) => {
-                    e.currentTarget.classList.add('button-press');
-                    setTimeout(() => e.currentTarget.classList.remove('button-press'), 100);
-                    this.startGame();
+                // Кнопка старта/прыжка
+                document.getElementById('startBtn').addEventListener('click', () => {
+                    if (!this.gameStarted || this.gameOver) {
+                        this.startGame();
+                    } else {
+                        this.jump();
+                    }
                 });
                 
                 // Сенсорное управление
                 this.canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
-                    this.jump();
-                    if (navigator.vibrate) navigator.vibrate(50);
-                });
-                
-                // Свайпы
-                let touchStartY = 0;
-                this.canvas.addEventListener('touchstart', (e) => {
-                    touchStartY = e.touches[0].clientY;
-                });
-                
-                this.canvas.addEventListener('touchmove', (e) => {
-                    e.preventDefault();
-                    const touchY = e.touches[0].clientY;
-                    const diff = touchY - touchStartY;
-                    
-                    if (diff > 50 && !this.dino.ducking) {
-                        this.duck();
-                    } else if (diff < -50 && this.dino.ducking) {
-                        this.stopDuck();
+                    if (!this.gameStarted || this.gameOver) {
+                        this.startGame();
+                    } else {
+                        this.jump();
                     }
                 });
                 
                 // Клавиатура
                 document.addEventListener('keydown', (e) => {
-                    if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    if (e.code === 'Space') {
                         e.preventDefault();
-                        this.jump();
-                    } else if (e.code === 'ArrowDown') {
-                        e.preventDefault();
-                        this.duck();
-                    }
-                });
-                
-                document.addEventListener('keyup', (e) => {
-                    if (e.code === 'ArrowDown') {
-                        this.stopDuck();
+                        if (!this.gameStarted || this.gameOver) {
+                            this.startGame();
+                        } else {
+                            this.jump();
+                        }
                     }
                 });
             }
@@ -495,9 +310,7 @@
                 this.lastObstacleTime = Date.now();
                 this.gameSpeed = 1;
                 
-                document.body.classList.add('game-started');
-                document.getElementById('startBtn').classList.add('game-active');
-                document.getElementById('startBtn').textContent = '🔄 РЕСТАРТ';
+                document.getElementById('startBtn').textContent = '🦖 ПРЫЖОК';
             }
             
             resetGame() {
@@ -509,29 +322,15 @@
                 this.gameSpeed = 1;
                 this.dino.y = this.canvas.height * 0.75;
                 this.dino.jumping = false;
-                this.dino.ducking = false;
                 this.dino.jumpVelocity = 0;
             }
             
             jump() {
                 if (!this.dino.jumping && this.gameStarted && !this.gameOver) {
                     this.dino.jumping = true;
-                    this.dino.jumpVelocity = -18 * (this.canvas.height / 200);
+                    // Уменьшенная высота прыжка
+                    this.dino.jumpVelocity = -12;
                 }
-            }
-            
-            duck() {
-                if (!this.dino.jumping && this.gameStarted && !this.gameOver) {
-                    this.dino.ducking = true;
-                    this.dino.height = this.dino.width;
-                    this.dino.y = this.canvas.height * 0.75 + (this.dino.width * 0.5);
-                }
-            }
-            
-            stopDuck() {
-                this.dino.ducking = false;
-                this.dino.height = this.dino.width * 2;
-                this.dino.y = this.canvas.height * 0.75;
             }
             
             update() {
@@ -558,7 +357,7 @@
                 
                 // Обновление препятствий
                 this.obstacles.forEach((obstacle, index) => {
-                    obstacle.x -= obstacle.speed * 5 * (this.canvas.width / 800);
+                    obstacle.x -= obstacle.speed * 5;
                     
                     // Проверка столкновений
                     if (this.checkCollision(this.dino, obstacle)) {
@@ -572,7 +371,7 @@
                 });
                 
                 // Обновление земли
-                this.groundX -= this.gameSpeed * 5 * (this.canvas.width / 800);
+                this.groundX -= this.gameSpeed * 5;
                 if (this.groundX <= -this.canvas.width) {
                     this.groundX = 0;
                 }
@@ -581,39 +380,32 @@
                 this.score += this.gameSpeed;
                 if (this.score % 500 === 0) {
                     this.gameSpeed += 0.1;
-                    document.getElementById('speed').textContent = this.gameSpeed.toFixed(1) + 'x';
-                    
-                    // Уменьшаем интервал с увеличением скорости для баланса
-                    this.obstacleInterval = Math.max(1000, 2000 / this.gameSpeed);
                 }
                 
                 document.getElementById('score').textContent = Math.floor(this.score);
             }
             
             spawnObstacle() {
-                const obstacleSize = this.canvas.width * 0.06;
                 const types = ['meteor', 'stump'];
                 const type = types[Math.floor(Math.random() * types.length)];
                 
                 if (type === 'meteor') {
-                    // Метеорит летит сверху
+                    // Метеорит летит по земле (как обычное препятствие)
                     this.obstacles.push({
                         x: this.canvas.width,
-                        y: Math.random() * (this.canvas.height * 0.4),
-                        width: obstacleSize * 1.5,
-                        height: obstacleSize * 1.5,
+                        y: this.canvas.height * 0.75 - 30,
+                        width: 35,
+                        height: 35,
                         type: 'meteor',
-                        speed: this.gameSpeed,
-                        rotation: 0,
-                        rotationSpeed: (Math.random() - 0.5) * 0.2
+                        speed: this.gameSpeed
                     });
                 } else {
-                    // Пень на земле
+                    // Пень
                     this.obstacles.push({
                         x: this.canvas.width,
-                        y: this.canvas.height * 0.75 - obstacleSize * 0.5,
-                        width: obstacleSize * 1.2,
-                        height: obstacleSize,
+                        y: this.canvas.height * 0.75 - 40,
+                        width: 30,
+                        height: 40,
                         type: 'stump',
                         speed: this.gameSpeed
                     });
@@ -621,42 +413,27 @@
             }
             
             checkCollision(dino, obstacle) {
-                // Упрощенная проверка столкновений для круглых объектов
-                if (obstacle.type === 'meteor') {
-                    // Метеорит - круг
-                    const meteorCenterX = obstacle.x + obstacle.width / 2;
-                    const meteorCenterY = obstacle.y + obstacle.height / 2;
-                    const meteorRadius = obstacle.width / 2;
-                    
-                    const dinoCenterX = dino.x + dino.width / 2;
-                    const dinoCenterY = dino.y + dino.height / 2;
-                    const dinoRadius = Math.min(dino.width, dino.height) / 2;
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(meteorCenterX - dinoCenterX, 2) + 
-                        Math.pow(meteorCenterY - dinoCenterY, 2)
-                    );
-                    
-                    return distance < (meteorRadius + dinoRadius);
-                } else {
-                    // Пень - прямоугольник
-                    return dino.x < obstacle.x + obstacle.width &&
-                           dino.x + dino.width > obstacle.x &&
-                           dino.y < obstacle.y + obstacle.height &&
-                           dino.y + dino.height > obstacle.y;
-                }
+                return dino.x < obstacle.x + obstacle.width &&
+                       dino.x + dino.width > obstacle.x &&
+                       dino.y < obstacle.y + obstacle.height &&
+                       dino.y + dino.height > obstacle.y;
             }
             
             draw() {
-                // Космический фон
-                this.ctx.fillStyle = '#1a1a2e';
-                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                // Очистка canvas
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 
-                // Звезды на canvas
-                this.drawStars();
+                // Небо
+                this.ctx.fillStyle = '#87CEEB';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height * 0.8);
                 
-                // Лунная поверхность
-                this.drawGround();
+                // Земля
+                this.ctx.fillStyle = '#8B4513';
+                this.ctx.fillRect(0, this.canvas.height * 0.75, this.canvas.width, this.canvas.height * 0.25);
+                
+                // Трава
+                this.ctx.fillStyle = '#7CFC00';
+                this.ctx.fillRect(0, this.canvas.height * 0.75, this.canvas.width, 5);
                 
                 // Динозаврик
                 this.drawDino();
@@ -674,189 +451,94 @@
                 this.drawMessages();
             }
             
-            drawStars() {
-                this.ctx.fillStyle = 'white';
-                for (let i = 0; i < 20; i++) {
-                    const x = (this.groundX * 0.5 + i * 50) % this.canvas.width;
-                    const y = Math.random() * this.canvas.height * 0.7;
-                    const size = Math.random() * 1.5 + 0.5;
-                    
-                    this.ctx.beginPath();
-                    this.ctx.arc(x, y, size, 0, Math.PI * 2);
-                    this.ctx.fill();
-                }
-            }
-            
-            drawGround() {
-                // Лунная поверхность
-                const groundY = this.canvas.height * 0.85;
-                
-                // Основная поверхность
-                this.ctx.fillStyle = '#5d5d5d';
-                this.ctx.fillRect(0, groundY, this.canvas.width, this.canvas.height - groundY);
-                
-                // Кратеры
-                this.ctx.fillStyle = '#4a4a4a';
-                for (let i = 0; i < 5; i++) {
-                    const x = (this.groundX + i * 100) % this.canvas.width;
-                    const radius = 8 + Math.random() * 12;
-                    this.ctx.beginPath();
-                    this.ctx.arc(x, groundY + 10, radius, 0, Math.PI * 2);
-                    this.ctx.fill();
-                }
-                
-                // Линия горизонта
-                this.ctx.strokeStyle = '#feca57';
-                this.ctx.setLineDash([5, 5]);
-                this.ctx.beginPath();
-                this.ctx.moveTo(0, groundY);
-                this.ctx.lineTo(this.canvas.width, groundY);
-                this.ctx.stroke();
-                this.ctx.setLineDash([]);
-            }
-            
             drawDino() {
                 // Тело динозавра
-                this.ctx.fillStyle = '#4ecdc4';
+                this.ctx.fillStyle = '#4CAF50';
                 this.ctx.fillRect(this.dino.x, this.dino.y, this.dino.width, this.dino.height);
                 
-                // Голова
-                this.ctx.fillStyle = '#45b7af';
-                this.ctx.fillRect(this.dino.x + this.dino.width * 0.7, this.dino.y - this.dino.height * 0.3, 
-                                 this.dino.width * 0.6, this.dino.height * 0.6);
-                
-                // Глаза
+                // Глаз
                 this.ctx.fillStyle = 'white';
-                this.ctx.fillRect(this.dino.x + this.dino.width * 0.8, this.dino.y + this.dino.height * 0.1, 
-                                 this.dino.width * 0.15, this.dino.height * 0.15);
-                this.ctx.fillStyle = '#ff6b6b';
-                this.ctx.fillRect(this.dino.x + this.dino.width * 0.82, this.dino.y + this.dino.height * 0.12, 
-                                 this.dino.width * 0.08, this.dino.height * 0.08);
+                this.ctx.fillRect(this.dino.x + 25, this.dino.y + 10, 8, 8);
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillRect(this.dino.x + 27, this.dino.y + 12, 4, 4);
                 
                 // Ноги
-                this.ctx.fillStyle = '#45b7af';
                 if (!this.dino.jumping) {
-                    this.ctx.fillRect(this.dino.x + this.dino.width * 0.2, this.dino.y + this.dino.height, 
-                                     this.dino.width * 0.2, this.dino.height * 0.3);
-                    this.ctx.fillRect(this.dino.x + this.dino.width * 0.6, this.dino.y + this.dino.height, 
-                                     this.dino.width * 0.2, this.dino.height * 0.3);
-                }
-                
-                // Спинные пластины
-                for (let i = 0; i < 3; i++) {
-                    this.ctx.fillStyle = i % 2 === 0 ? '#ff6b6b' : '#feca57';
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(this.dino.x + this.dino.width * 0.3 + i * this.dino.width * 0.2, this.dino.y);
-                    this.ctx.lineTo(this.dino.x + this.dino.width * 0.4 + i * this.dino.width * 0.2, this.dino.y - this.dino.height * 0.4);
-                    this.ctx.lineTo(this.dino.x + this.dino.width * 0.5 + i * this.dino.width * 0.2, this.dino.y);
-                    this.ctx.fill();
+                    this.ctx.fillStyle = '#45a049';
+                    this.ctx.fillRect(this.dino.x + 5, this.dino.y + this.dino.height, 8, 15);
+                    this.ctx.fillRect(this.dino.x + 25, this.dino.y + this.dino.height, 8, 15);
                 }
             }
             
             drawMeteor(meteor) {
-                // Вращение метеорита
-                meteor.rotation += meteor.rotationSpeed;
-                
-                this.ctx.save();
-                this.ctx.translate(meteor.x + meteor.width / 2, meteor.y + meteor.height / 2);
-                this.ctx.rotate(meteor.rotation);
-                
-                // Основное тело метеорита
-                const gradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, meteor.width / 2);
-                gradient.addColorStop(0, '#ff6b6b');
-                gradient.addColorStop(0.7, '#ee5a52');
-                gradient.addColorStop(1, '#c23616');
-                
-                this.ctx.fillStyle = gradient;
+                // Простой метеорит - серый круг
+                this.ctx.fillStyle = '#666';
                 this.ctx.beginPath();
-                this.ctx.arc(0, 0, meteor.width / 2, 0, Math.PI * 2);
+                this.ctx.arc(meteor.x + meteor.width/2, meteor.y + meteor.height/2, meteor.width/2, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                // Огненный хвост
-                this.ctx.fillStyle = '#feca57';
+                // Детали метеорита
+                this.ctx.fillStyle = '#888';
                 this.ctx.beginPath();
-                this.ctx.moveTo(-meteor.width / 2, 0);
-                this.ctx.lineTo(-meteor.width, -meteor.height / 4);
-                this.ctx.lineTo(-meteor.width * 1.5, 0);
-                this.ctx.lineTo(-meteor.width, meteor.height / 4);
-                this.ctx.closePath();
+                this.ctx.arc(meteor.x + meteor.width/3, meteor.y + meteor.height/3, 5, 0, Math.PI * 2);
                 this.ctx.fill();
                 
-                this.ctx.restore();
+                this.ctx.beginPath();
+                this.ctx.arc(meteor.x + meteor.width*2/3, meteor.y + meteor.height*2/3, 4, 0, Math.PI * 2);
+                this.ctx.fill();
             }
             
             drawStump(stump) {
-                // Основной ствол
-                const gradient = this.ctx.createLinearGradient(stump.x, stump.y, stump.x, stump.y + stump.height);
-                gradient.addColorStop(0, '#8b4513');
-                gradient.addColorStop(1, '#654321');
-                
-                this.ctx.fillStyle = gradient;
+                // Пень - коричневый прямоугольник
+                this.ctx.fillStyle = '#8B4513';
                 this.ctx.fillRect(stump.x, stump.y, stump.width, stump.height);
                 
                 // Кольца на пне
-                this.ctx.strokeStyle = '#5d4037';
-                this.ctx.lineWidth = 1;
-                for (let i = 1; i <= 3; i++) {
-                    const ringY = stump.y + (stump.height / 4) * i;
-                    this.ctx.beginPath();
-                    this.ctx.arc(stump.x + stump.width / 2, ringY, stump.width / 3, 0, Math.PI * 2);
-                    this.ctx.stroke();
-                }
+                this.ctx.strokeStyle = '#654321';
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.arc(stump.x + stump.width/2, stump.y + stump.height/2, 8, 0, Math.PI * 2);
+                this.ctx.stroke();
                 
-                // Текстура коры
-                this.ctx.strokeStyle = '#5d4037';
-                this.ctx.lineWidth = 1;
-                for (let i = 0; i < 5; i++) {
-                    const barkX = stump.x + (stump.width / 6) * (i + 1);
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(barkX, stump.y);
-                    this.ctx.lineTo(barkX, stump.y + stump.height);
-                    this.ctx.stroke();
-                }
+                this.ctx.beginPath();
+                this.ctx.arc(stump.x + stump.width/2, stump.y + stump.height/2, 4, 0, Math.PI * 2);
+                this.ctx.stroke();
             }
             
             drawMessages() {
                 if (!this.gameStarted) {
-                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
                     this.ctx.fillStyle = 'white';
-                    this.ctx.font = `bold ${this.canvas.width * 0.04}px Arial`;
+                    this.ctx.font = '20px Arial';
                     this.ctx.textAlign = 'center';
-                    this.ctx.fillText('Космическое приключение!', this.canvas.width / 2, this.canvas.height / 2 - 20);
-                    this.ctx.font = `${this.canvas.width * 0.025}px Arial`;
-                    this.ctx.fillText('Прыгай через пни, уклоняйся от метеоритов!', this.canvas.width / 2, this.canvas.height / 2 + 10);
-                    this.ctx.fillText('Нажми СТАРТ чтобы начать', this.canvas.width / 2, this.canvas.height / 2 + 40);
+                    this.ctx.fillText('Нажми СТАРТ чтобы начать!', this.canvas.width / 2, this.canvas.height / 2);
+                    this.ctx.font = '14px Arial';
+                    this.ctx.fillText('Прыгай через пни и метеориты', this.canvas.width / 2, this.canvas.height / 2 + 30);
                 }
                 
                 if (this.gameOver) {
-                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
                     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                    this.ctx.fillStyle = '#ff6b6b';
-                    this.ctx.font = `bold ${this.canvas.width * 0.05}px Arial`;
-                    this.ctx.textAlign = 'center';
-                    this.ctx.fillText('МИССИЯ ПРОВАЛЕНА!', this.canvas.width / 2, this.canvas.height / 2 - 30);
                     this.ctx.fillStyle = 'white';
-                    this.ctx.font = `${this.canvas.width * 0.035}px Arial`;
-                    this.ctx.fillText(`Очки: ${Math.floor(this.score)}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
-                    this.ctx.fillText(`Рекорд: ${this.highScore}`, this.canvas.width / 2, this.canvas.height / 2 + 50);
-                    this.ctx.font = `${this.canvas.width * 0.025}px Arial`;
-                    this.ctx.fillText('Нажми СТАРТ для новой миссии', this.canvas.width / 2, this.canvas.height / 2 + 90);
+                    this.ctx.font = '24px Arial';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText('ИГРА ОКОНЧЕНА!', this.canvas.width / 2, this.canvas.height / 2 - 20);
+                    this.ctx.font = '16px Arial';
+                    this.ctx.fillText(`Счет: ${Math.floor(this.score)}`, this.canvas.width / 2, this.canvas.height / 2 + 10);
+                    this.ctx.fillText(`Рекорд: ${this.highScore}`, this.canvas.width / 2, this.canvas.height / 2 + 40);
                 }
             }
             
             endGame() {
                 this.gameOver = true;
                 this.gameStarted = false;
-                document.body.classList.remove('game-started');
-                document.getElementById('startBtn').classList.remove('game-active');
                 document.getElementById('startBtn').textContent = '🎮 СТАРТ';
                 
                 if (this.score > this.highScore) {
                     this.highScore = Math.floor(this.score);
                     this.saveHighScore();
                     document.getElementById('highScore').textContent = this.highScore;
-                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
                 }
             }
             
@@ -880,16 +562,6 @@
         // Инициализация игры
         document.addEventListener('DOMContentLoaded', () => {
             new DinoGame();
-        });
-
-        // Предотвращение стандартного поведения
-        document.addEventListener('touchmove', function(e) {
-            if (e.scale !== 1) e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
         });
     </script>
 </body>
